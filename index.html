@@ -1,787 +1,986 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OSI Master Visualizer</title>
-    
-    <!-- React & ReactDOM -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    
-    <!-- Babel for JSX -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- GSAP -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-              mono: ['JetBrains Mono', 'monospace'],
-            },
-            animation: {
-              'spin-slow': 'spin 8s linear infinite',
-              'pulse-glow': 'pulse 3s infinite',
-            }
-          }
-        }
-      }
-    </script>
-    
-    <style>
-      body {
-        background-color: #020617;
-        color: #e2e8f0;
-        margin: 0;
-        overflow: hidden;
-      }
-      .glass-panel {
-        background: rgba(15, 23, 42, 0.6);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-      }
-      
-      /* Custom Scrollbar */
-      .custom-scrollbar::-webkit-scrollbar {
-        width: 6px;
-      }
-      .custom-scrollbar::-webkit-scrollbar-track {
-        background: rgba(0, 0, 0, 0.1);
-      }
-      .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 3px;
-      }
-      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.2);
-      }
-    </style>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QRWGZZ6CM0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-QRWGZZ6CM0');
+</script>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>OSI Master Visualizer</title>
+ 
+ <!-- React & ReactDOM -->
+ <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+ <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+ 
+ <!-- Babel for JSX -->
+ <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+ 
+ <!-- Tailwind CSS -->
+ <script src="https://cdn.tailwindcss.com"></script>
+ 
+ <!-- GSAP -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+ 
+ <!-- Fonts -->
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+ 
+ <script>
+ tailwind.config = {
+  theme: {
+   extend: {
+    fontFamily: {
+     sans: ['Inter', 'sans-serif'],
+     mono: ['JetBrains Mono', 'monospace'],
+    },
+    animation: {
+     'spin-slow': 'spin 8s linear infinite',
+     'pulse-glow': 'pulse 3s infinite',
+    }
+   }
+  }
+ }
+ </script>
+ 
+ <style>
+ body {
+  background-color: #020617;
+  color: #e2e8f0;
+  margin: 0;
+  overflow: hidden;
+ }
+ .glass-panel {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+ }
+ 
+ /* Custom Scrollbar */
+ .custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+ }
+ .custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+ }
+ .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+ }
+ .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+ }
+ 
+ /* Slider Styles */
+ .slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: #475569;
+  border-radius: 2px;
+  outline: none;
+ }
+ .slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #06b6d4;
+  border-radius: 50%;
+  cursor: pointer;
+ }
+ .slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: #06b6d4;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+ }
+ 
+ /* Screen Reader Only */
+ .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+ }
+ </style>
 </head>
 <body>
-    <div id="root"></div>
+ <div id="root"></div>
 
-    <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+ <script type="text/babel">
+ const { useState, useEffect, useRef } = React;
 
-        // --- ICONS (Inline to avoid dependency issues) ---
-        const Icon = ({ path, size = 24, className = "", style = {} }) => (
-            <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                width={size} height={size} 
-                viewBox="0 0 24 24" 
-                fill="none" stroke="currentColor" 
-                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" 
-                className={className} style={style}
-            >
-                {path}
-            </svg>
+ // --- ICONS (Inline to avoid dependency issues) ---
+ const Icon = ({ path, size = 24, className = "", style = {} }) => (
+  <svg 
+   xmlns="http://www.w3.org/2000/svg" 
+   width={size} height={size} 
+   viewBox="0 0 24 24" 
+   fill="none" stroke="currentColor" 
+   strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" 
+   className={className} style={style}
+  >
+   {path}
+  </svg>
+ );
+
+ const Icons = {
+  Play: (p) => <Icon {...p} path={<polygon points="5 3 19 12 5 21 5 3"></polygon>} />,
+  Pause: (p) => <Icon {...p} path={<><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></>} />,
+  RotateCcw: (p) => <Icon {...p} path={<><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 12"></path><path d="M3 3v9h9"></path></>} />,
+  Network: (p) => <Icon {...p} path={<><rect x="16" y="16" width="6" height="6" rx="1"></rect><rect x="2" y="16" width="6" height="6" rx="1"></rect><rect x="9" y="2" width="6" height="6" rx="1"></rect><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"></path><path d="M12 12V8"></path></>} />,
+  Wifi: (p) => <Icon {...p} path={<><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></>} />,
+  Info: (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></>} />,
+  X: (p) => <Icon {...p} path={<><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></>} />,
+  ArrowDown: (p) => <Icon {...p} path={<><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></>} />,
+  ArrowUp: (p) => <Icon {...p} path={<><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></>} />,
+  BookOpen: (p) => <Icon {...p} path={<><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></>} />,
+  Layers: (p) => <Icon {...p} path={<><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></>} />,
+  Activity: (p) => <Icon {...p} path={<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>} />,
+  Search: (p) => <Icon {...p} path={<><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></>} />,
+  Monitor: (p) => <Icon {...p} path={<><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></>} />,
+  FileCode: (p) => <Icon {...p} path={<><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="m10 13-2 2 2 2"></path><path d="m14 17 2-2-2-2"></path></>} />,
+  Handshake: (p) => <Icon {...p} path={<><path d="m11 17 2 2a1 1 0 1 0 3-3"></path><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-1.42-1.42l.88-.88a5 5 0 0 1 7.07 0l2.12 2.12a5 5 0 0 1 0 7.07l-2.5 2.5a5 5 0 0 1-7.07 0l-1.41-1.41a5 5 0 0 1 0-7.07l2.5-2.5a1 1 0 0 0 0-1.41l-.88-.88a3 3 0 0 0-4.24 0l-1.41 1.41a7 7 0 0 0 0 9.9l2.5 2.5a7 7 0 0 0 9.9 0Z"></path></>} />, 
+  Truck: (p) => <Icon {...p} path={<><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></>} />,
+  Globe: (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></>} />,
+  Link: (p) => <Icon {...p} path={<><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></>} />,
+  Cable: (p) => <Icon {...p} path={<><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></>} />,
+  Laptop: (p) => <Icon {...p} path={<><rect x="3" y="4" width="18" height="12" rx="3"></rect><line x1="3" y1="20" x2="21" y2="20"></line><line x1="2" y1="20" x2="2" y2="20"></line><line x1="22" y1="20" x2="22" y2="20"></line></>} />,
+  Server: (p) => <Icon {...p} path={<><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></>} />,
+  Maximize: (p) => <Icon {...p} path={<><path d="M15 3h6v6"></path><path d="M15 21V21a0 0 0 0 0 0 0h0"></path><path d="M21.5 21.5h-17"></path><path d="m3 16-1.5-1.5"></path></>} />
+ };
+
+ const IconMap = {
+  Monitor: Icons.Monitor,
+  FileCode: Icons.FileCode,
+  Handshake: Icons.Handshake,
+  Truck: Icons.Truck,
+  Globe: Icons.Globe,
+  Link: Icons.Link,
+  Cable: Icons.Cable
+ };
+
+ // --- CONSTANTS ---
+ const SIMULATION_LAYERS = [
+  {
+   id: 7, name: 'Application', color: 'bg-red-500', neonColor: '#ef4444', iconName: 'Monitor', pdus: 'Data',
+   description: 'The layer that the user interacts with directly. It provides network services to user applications.',
+   analogy: 'The web browser or email client you are using.',
+   protocols: ['HTTP', 'DNS', 'SMTP', 'FTP', 'SSH'],
+   headerInfo: { title: "App Header", fields: ["Data: Hello World", "Method: GET", "Host: google.com"] }
+  },
+  {
+   id: 6, name: 'Presentation', color: 'bg-orange-500', neonColor: '#f97316', iconName: 'FileCode', pdus: 'Data',
+   description: 'Ensures that data is in a usable format and is where data encryption occurs.',
+   analogy: 'A translator translating a document from French to English.',
+   protocols: ['SSL/TLS', 'JPEG', 'MPEG', 'ASCII'],
+   headerInfo: { title: "Pres Header", fields: ["Encoding: UTF-8", "Compression: GZIP", "Encryption: TLS 1.3"] }
+  },
+  {
+   id: 5, name: 'Session', color: 'bg-yellow-500', neonColor: '#eab308', iconName: 'Handshake', pdus: 'Data',
+   description: 'Maintains connections and is responsible for controlling ports and sessions.',
+   analogy: 'Setting up a phone call, talking, and hanging up.',
+   protocols: ['NetBIOS', 'RPC', 'PPTP'],
+   headerInfo: { title: "Session Header", fields: ["Session ID: #8291", "Control: Sync", "Keep-Alive: True"] }
+  },
+  {
+   id: 4, name: 'Transport', color: 'bg-green-500', neonColor: '#22c55e', iconName: 'Truck', pdus: 'Segments',
+   description: 'Transmits data using transmission protocols including TCP and UDP.',
+   analogy: 'The shipping boxes and labels ensuring items arrive intact.',
+   protocols: ['TCP', 'UDP'],
+   headerInfo: { title: "TCP Header", fields: ["Source Port: 443", "Dest Port: 52110", "Seq Num: 102", "Window: 65535"] }
+  },
+  {
+   id: 3, name: 'Network', color: 'bg-cyan-500', neonColor: '#06b6d4', iconName: 'Globe', pdus: 'Packets',
+   description: 'Decides which physical path the data will take.',
+   analogy: 'The GPS or mail sorting center determining the route.',
+   protocols: ['IP', 'ICMP', 'IPsec'],
+   headerInfo: { title: "IP Header", fields: ["Source IP: 192.168.1.5", "Dest IP: 172.217.1.1", "TTL: 64", "Version: IPv4"] }
+  },
+  {
+   id: 2, name: 'Data Link', color: 'bg-blue-500', neonColor: '#3b82f6', iconName: 'Link', pdus: 'Frames',
+   description: 'Defines the format of data on the network.',
+   analogy: 'The local delivery truck taking the package to your door.',
+   protocols: ['Ethernet', 'PPP', 'VLAN'],
+   headerInfo: { title: "Ethernet Frame", fields: ["Source MAC: A1:B2...", "Dest MAC: C3:D4...", "VLAN ID: 10", "FCS: 0x3A2B"] }
+  },
+  {
+   id: 1, name: 'Physical', color: 'bg-purple-500', neonColor: '#a855f7', iconName: 'Cable', pdus: 'Bits',
+   description: 'Transmits raw bit stream over the physical medium.',
+   analogy: 'The copper wires or fiber optic cables themselves.',
+   protocols: ['Wi-Fi', 'Ethernet (Phy)', 'Bluetooth'],
+   headerInfo: { title: "Physical Signal", fields: ["Preamble: 101010...", "Encoding: Manchester", "Voltage: +5V"] }
+  },
+ ];
+
+ // Simple Quiz Questions
+ const QUIZ_QUESTIONS = [
+  { question: "What is the PDU for the Transport layer?", options: ["Data", "Segments", "Packets", "Frames"], correct: 1 },
+  { question: "Which layer handles encryption?", options: ["Application", "Presentation", "Session", "Network"], correct: 1 },
+  { question: "What protocol is commonly used in the Network layer?", options: ["TCP", "HTTP", "IP", "Ethernet"], correct: 2 }
+ ];
+
+ // --- COMPONENTS ---
+
+ // 1. Network Background
+ const NetworkBackground = () => {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+   const canvas = canvasRef.current;
+   const ctx = canvas.getContext('2d');
+   let width = canvas.width = window.innerWidth;
+   let height = canvas.height = window.innerHeight;
+
+   const particles = [];
+   for (let i = 0; i < 40; i++) {
+    particles.push({
+     x: Math.random() * width,
+     y: Math.random() * height,
+     vx: (Math.random() - 0.5) * 0.2,
+     vy: (Math.random() - 0.5) * 0.2,
+     size: Math.random() * 2,
+    });
+   }
+
+   const animate = () => {
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+    particles.forEach(p => {
+     p.x += p.vx;
+     p.y += p.vy;
+     if (p.x < 0) p.x = width;
+     if (p.x > width) p.x = 0;
+     if (p.y < 0) p.y = height;
+     if (p.y > height) p.y = 0;
+     ctx.beginPath();
+     ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+     ctx.fill();
+    });
+    requestAnimationFrame(animate);
+   };
+   const animId = requestAnimationFrame(animate);
+   const handleResize = () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+   };
+   window.addEventListener('resize', handleResize);
+   return () => {
+    window.removeEventListener('resize', handleResize);
+    cancelAnimationFrame(animId);
+   };
+  }, []);
+
+  return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0 opacity-50" />;
+ };
+
+ // 2. Packet Inspector
+ const PacketInspector = ({ onClose }) => {
+  const [hoveredLayer, setHoveredLayer] = useState(null);
+
+  return (
+   <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+    <div className="bg-slate-900 border border-white/10 w-full max-w-5xl h-[80vh] rounded-2xl flex overflow-hidden shadow-2xl relative">
+     <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-white z-50 p-2 hover:bg-white/10 rounded-full transition-colors">
+      <Icons.X size={24} />
+     </button>
+     
+     <div className="w-1/3 bg-slate-950/50 border-r border-white/5 p-6 overflow-y-auto">
+      <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+       <Icons.Search size={20} className="text-cyan-400" /> Packet Structure
+      </h2>
+      <p className="text-slate-400 text-sm mb-6">Hover over the nested layers to see the headers added during encapsulation.</p>
+      
+      <div className="space-y-2">
+       {SIMULATION_LAYERS.slice().reverse().map((layer, index) => {
+        const isHovered = hoveredLayer === layer.id;
+        return (
+         <div 
+          key={layer.id}
+          className={`p-3 rounded-lg border transition-all duration-300 ${isHovered ? 'bg-slate-800 border-cyan-500/50 translate-x-2' : 'bg-slate-900 border-white/5 opacity-60'}`}
+          style={{ marginLeft: `${index * 12}px` }}
+         >
+          <div className="flex items-center gap-2 mb-1">
+           <span className="w-2 h-2 rounded-full" style={{ backgroundColor: layer.neonColor }}></span>
+           <span className={`text-sm font-bold ${isHovered ? 'text-white' : 'text-slate-400'}`}>{layer.name} Header</span>
+          </div>
+          {isHovered && (
+           <div className="space-y-1 mt-2 pl-4 border-l border-white/10">
+            {layer.headerInfo.fields.map((field, i) => (
+             <div key={i} className="text-xs font-mono text-cyan-200/80">{field}</div>
+            ))}
+           </div>
+          )}
+         </div>
         );
+       })}
+       <div className="p-3 rounded-lg bg-white/10 border border-white/20 text-center mt-4 mx-8 animate-pulse">
+        <span className="text-xs font-bold text-white uppercase tracking-widest">Payload Data</span>
+       </div>
+      </div>
+     </div>
 
-        const Icons = {
-            Play: (p) => <Icon {...p} path={<polygon points="5 3 19 12 5 21 5 3"></polygon>} />,
-            Pause: (p) => <Icon {...p} path={<><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></>} />,
-            RotateCcw: (p) => <Icon {...p} path={<><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 12"></path><path d="M3 3v9h9"></path></>} />,
-            Network: (p) => <Icon {...p} path={<><rect x="16" y="16" width="6" height="6" rx="1"></rect><rect x="2" y="16" width="6" height="6" rx="1"></rect><rect x="9" y="2" width="6" height="6" rx="1"></rect><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"></path><path d="M12 12V8"></path></>} />,
-            Wifi: (p) => <Icon {...p} path={<><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></>} />,
-            Info: (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></>} />,
-            X: (p) => <Icon {...p} path={<><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></>} />,
-            ArrowDown: (p) => <Icon {...p} path={<><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></>} />,
-            ArrowUp: (p) => <Icon {...p} path={<><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></>} />,
-            BookOpen: (p) => <Icon {...p} path={<><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></>} />,
-            Layers: (p) => <Icon {...p} path={<><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></>} />,
-            Activity: (p) => <Icon {...p} path={<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>} />,
-            Search: (p) => <Icon {...p} path={<><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></>} />,
-            Monitor: (p) => <Icon {...p} path={<><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></>} />,
-            FileCode: (p) => <Icon {...p} path={<><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="m10 13-2 2 2 2"></path><path d="m14 17 2-2-2-2"></path></>} />,
-            Handshake: (p) => <Icon {...p} path={<><path d="m11 17 2 2a1 1 0 1 0 3-3"></path><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-1.42-1.42l.88-.88a5 5 0 0 1 7.07 0l2.12 2.12a5 5 0 0 1 0 7.07l-2.5 2.5a5 5 0 0 1-7.07 0l-1.41-1.41a5 5 0 0 1 0-7.07l2.5-2.5a1 1 0 0 0 0-1.41l-.88-.88a3 3 0 0 0-4.24 0l-1.41 1.41a7 7 0 0 0 0 9.9l2.5 2.5a7 7 0 0 0 9.9 0Z"></path></>} />, 
-            Truck: (p) => <Icon {...p} path={<><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></>} />,
-            Globe: (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></>} />,
-            Link: (p) => <Icon {...p} path={<><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></>} />,
-            Cable: (p) => <Icon {...p} path={<><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></>} />,
-            Laptop: (p) => <Icon {...p} path={<><rect x="3" y="4" width="18" height="12" rx="3"></rect><line x1="3" y1="20" x2="21" y2="20"></line><line x1="2" y1="20" x2="2" y2="20"></line><line x1="22" y1="20" x2="22" y2="20"></line></>} />,
-            Server: (p) => <Icon {...p} path={<><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></>} />
-        };
+     <div className="flex-1 bg-slate-900 flex items-center justify-center p-8 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-cyan-900/10 via-slate-900 to-slate-900"></div>
+      
+      {/* Visual Nesting Doll Representation */}
+      <div className="relative z-10 flex items-center justify-center">
+       {SIMULATION_LAYERS.map((layer, index) => {
+        const size = 380 - (index * 40);
+        const isActive = hoveredLayer === layer.id;
+        
+        return (
+         <div
+          key={layer.id}
+          onMouseEnter={() => setHoveredLayer(layer.id)}
+          onMouseLeave={() => setHoveredLayer(null)}
+          className={`absolute flex items-start justify-center pt-2 rounded-xl border-2 transition-all duration-300 cursor-crosshair hover:shadow-[0_0_30px_rgba(0,0,0,0.5)]`}
+          style={{
+           width: `${size}px`,
+           height: `${size}px`,
+           borderColor: layer.neonColor,
+           backgroundColor: isActive ? `${layer.neonColor}10` : 'rgba(15, 23, 42, 0.8)',
+           zIndex: index,
+           transform: isActive ? 'scale(1.05)' : 'scale(1)',
+           boxShadow: isActive ? `0 0 20px ${layer.neonColor}40` : 'none'
+          }}
+         >
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider" style={{ color: layer.neonColor }}>
+           {layer.pdus} ({layer.name})
+          </span>
+         </div>
+        );
+       })}
+       <div className="absolute z-50 w-20 h-20 bg-white rounded-lg flex items-center justify-center shadow-lg animate-bounce">
+        <span className="text-slate-900 font-bold text-xs">DATA</span>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  );
+ };
 
-        const IconMap = {
-            Monitor: Icons.Monitor,
-            FileCode: Icons.FileCode,
-            Handshake: Icons.Handshake,
-            Truck: Icons.Truck,
-            Globe: Icons.Globe,
-            Link: Icons.Link,
-            Cable: Icons.Cable
-        };
+ // 3. Explanation Window
+ const ExplanationWindow = ({ layerId, phase, onClose }) => {
+  if (!layerId && phase !== 'transmission') return null;
 
-        // --- CONSTANTS ---
-        const SIMULATION_LAYERS = [
-            {
-                id: 7, name: 'Application', color: 'bg-red-500', neonColor: '#ef4444', iconName: 'Monitor', pdus: 'Data',
-                description: 'The layer that the user interacts with directly. It provides network services to user applications.',
-                analogy: 'The web browser or email client you are using.',
-                protocols: ['HTTP', 'DNS', 'SMTP', 'FTP', 'SSH'],
-                headerInfo: { title: "App Header", fields: ["Data: Hello World", "Method: GET", "Host: google.com"] }
-            },
-            {
-                id: 6, name: 'Presentation', color: 'bg-orange-500', neonColor: '#f97316', iconName: 'FileCode', pdus: 'Data',
-                description: 'Ensures that data is in a usable format and is where data encryption occurs.',
-                analogy: 'A translator translating a document from French to English.',
-                protocols: ['SSL/TLS', 'JPEG', 'MPEG', 'ASCII'],
-                headerInfo: { title: "Pres Header", fields: ["Encoding: UTF-8", "Compression: GZIP", "Encryption: TLS 1.3"] }
-            },
-            {
-                id: 5, name: 'Session', color: 'bg-yellow-500', neonColor: '#eab308', iconName: 'Handshake', pdus: 'Data',
-                description: 'Maintains connections and is responsible for controlling ports and sessions.',
-                analogy: 'Setting up a phone call, talking, and hanging up.',
-                protocols: ['NetBIOS', 'RPC', 'PPTP'],
-                headerInfo: { title: "Session Header", fields: ["Session ID: #8291", "Control: Sync", "Keep-Alive: True"] }
-            },
-            {
-                id: 4, name: 'Transport', color: 'bg-green-500', neonColor: '#22c55e', iconName: 'Truck', pdus: 'Segments',
-                description: 'Transmits data using transmission protocols including TCP and UDP.',
-                analogy: 'The shipping boxes and labels ensuring items arrive intact.',
-                protocols: ['TCP', 'UDP'],
-                headerInfo: { title: "TCP Header", fields: ["Source Port: 443", "Dest Port: 52110", "Seq Num: 102", "Window: 65535"] }
-            },
-            {
-                id: 3, name: 'Network', color: 'bg-cyan-500', neonColor: '#06b6d4', iconName: 'Globe', pdus: 'Packets',
-                description: 'Decides which physical path the data will take.',
-                analogy: 'The GPS or mail sorting center determining the route.',
-                protocols: ['IP', 'ICMP', 'IPsec'],
-                headerInfo: { title: "IP Header", fields: ["Source IP: 192.168.1.5", "Dest IP: 172.217.1.1", "TTL: 64", "Version: IPv4"] }
-            },
-            {
-                id: 2, name: 'Data Link', color: 'bg-blue-500', neonColor: '#3b82f6', iconName: 'Link', pdus: 'Frames',
-                description: 'Defines the format of data on the network.',
-                analogy: 'The local delivery truck taking the package to your door.',
-                protocols: ['Ethernet', 'PPP', 'VLAN'],
-                headerInfo: { title: "Ethernet Frame", fields: ["Source MAC: A1:B2...", "Dest MAC: C3:D4...", "VLAN ID: 10", "FCS: 0x3A2B"] }
-            },
-            {
-                id: 1, name: 'Physical', color: 'bg-purple-500', neonColor: '#a855f7', iconName: 'Cable', pdus: 'Bits',
-                description: 'Transmits raw bit stream over the physical medium.',
-                analogy: 'The copper wires or fiber optic cables themselves.',
-                protocols: ['Wi-Fi', 'Ethernet (Phy)', 'Bluetooth'],
-                headerInfo: { title: "Physical Signal", fields: ["Preamble: 101010...", "Encoding: Manchester", "Voltage: +5V"] }
-            },
-        ];
+  let positionClasses = "top-24 right-4 md:right-8"; 
 
-        // --- COMPONENTS ---
+  if (phase === 'decapsulation') {
+   positionClasses = "top-24 left-4 md:left-8";
+  } else if (phase === 'transmission') {
+   positionClasses = "top-32 left-1/2 -translate-x-1/2";
+  } else if (phase === 'explore') {
+   positionClasses = "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/20";
+  }
 
-        // 1. Network Background
-        const NetworkBackground = () => {
-            const canvasRef = useRef(null);
+  if (phase === 'transmission') {
+   return (
+    <div className={`absolute ${positionClasses} w-80 glass-panel border-l-4 border-purple-500 rounded-xl overflow-hidden z-40`}>
+     <div className="p-5">
+      <div className="flex items-center gap-3 mb-3 text-purple-400">
+       <Icons.Activity className="animate-pulse" size={20} />
+       <h3 className="font-bold text-lg tracking-wide uppercase">Transmission</h3>
+      </div>
+      <p className="text-slate-300 text-sm leading-relaxed mb-4">
+       The raw bit stream is transmitted over the physical medium (Wired/Wireless). Data exists here purely as signals.
+      </p>
+      <div className="flex gap-2">
+       <span className="px-2 py-1 bg-purple-500/10 border border-purple-500/30 rounded text-xs font-mono text-purple-300">Binary</span>
+       <span className="px-2 py-1 bg-purple-500/10 border border-purple-500/30 rounded text-xs font-mono text-purple-300">Signals</span>
+      </div>
+     </div>
+    </div>
+   );
+  }
 
-            useEffect(() => {
-                const canvas = canvasRef.current;
-                const ctx = canvas.getContext('2d');
-                let width = canvas.width = window.innerWidth;
-                let height = canvas.height = window.innerHeight;
+  const layer = SIMULATION_LAYERS.find(l => l.id === layerId);
+  if (!layer) return null;
 
-                const particles = [];
-                for (let i = 0; i < 40; i++) {
-                    particles.push({
-                        x: Math.random() * width,
-                        y: Math.random() * height,
-                        vx: (Math.random() - 0.5) * 0.2,
-                        vy: (Math.random() - 0.5) * 0.2,
-                        size: Math.random() * 2,
-                    });
-                }
+  const isEncapsulating = phase === 'encapsulation';
+  const actionText = isEncapsulating ? "Encapsulating Data" : phase === 'decapsulation' ? "Decapsulating Data" : "Layer Details";
+  const actionColor = isEncapsulating ? "text-cyan-400" : phase === 'decapsulation' ? "text-green-400" : "text-white";
 
-                const animate = () => {
-                    ctx.clearRect(0, 0, width, height);
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
-                    particles.forEach(p => {
-                        p.x += p.vx;
-                        p.y += p.vy;
-                        if (p.x < 0) p.x = width;
-                        if (p.x > width) p.x = 0;
-                        if (p.y < 0) p.y = height;
-                        if (p.y > height) p.y = 0;
-                        ctx.beginPath();
-                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                        ctx.fill();
-                    });
-                    requestAnimationFrame(animate);
-                };
-                const animId = requestAnimationFrame(animate);
-                const handleResize = () => {
-                    width = canvas.width = window.innerWidth;
-                    height = canvas.height = window.innerHeight;
-                };
-                window.addEventListener('resize', handleResize);
-                return () => {
-                    window.removeEventListener('resize', handleResize);
-                    cancelAnimationFrame(animId);
-                };
-            }, []);
+  return (
+   <div className={`absolute ${positionClasses} w-80 md:w-96 glass-panel rounded-xl overflow-hidden shadow-2xl z-40 flex flex-col max-h-[calc(100vh-150px)] transition-all ease-out`}>
+    <div className="relative p-5 pb-4 bg-slate-900/50 border-b border-white/5">
+     <div className="flex justify-between items-start">
+      <div>
+       <div className={`text-xs font-bold uppercase tracking-widest mb-1 flex items-center gap-2 ${actionColor}`}>
+        {isEncapsulating && <Icons.ArrowDown size={14} className="animate-bounce" />}
+        {phase === 'decapsulation' && <Icons.ArrowUp size={14} className="animate-bounce" />}
+        {phase === 'explore' && <Icons.BookOpen size={14} />}
+        {actionText}
+       </div>
+       <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+        <span className="flex items-center justify-center w-8 h-8 rounded bg-slate-800 text-sm font-mono border border-white/10" style={{ color: layer.neonColor, borderColor: layer.neonColor }}>
+         {layer.id}
+        </span>
+        {layer.name}
+       </h2>
+      </div>
+      {phase === 'explore' && (
+       <button onClick={onClose} className="text-slate-500 hover:text-white transition-colors bg-white/5 rounded-full p-1">
+        <Icons.X size={20} />
+       </button>
+      )}
+     </div>
+    </div>
+    <div className="p-5 pt-4 overflow-y-auto custom-scrollbar space-y-5">
+     <p className="text-slate-200 text-sm leading-relaxed">{layer.description}</p>
+     {phase !== 'explore' && (
+      <div className="p-3 bg-slate-800/40 rounded-lg border border-white/5 relative overflow-hidden">
+       <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-transparent via-white/20 to-transparent"></div>
+       <p className="text-xs text-slate-400 font-mono">
+        {isEncapsulating 
+         ? `Adding ${layer.name} Header (${layer.pdus}). Preparing for lower layer.`
+         : `Processing ${layer.name} Header. Extracting ${layer.pdus} for upper layer.`}
+       </p>
+      </div>
+     )}
+     <div>
+      <h4 className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-2 flex items-center gap-2">
+       <Icons.Info size={12} /> Real World Analogy
+      </h4>
+      <div className="p-4 bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl border border-white/5 italic text-slate-300 text-sm relative">"{layer.analogy}"</div>
+     </div>
+     <div>
+      <h4 className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-2 flex items-center gap-2">
+       <Icons.Layers size={12} /> Protocols & PDU
+      </h4>
+      <div className="flex flex-wrap gap-2">
+       <span className="px-2 py-1 bg-slate-800 text-cyan-200 rounded text-[10px] font-mono border border-cyan-500/20">PDU: {layer.pdus}</span>
+       {layer.protocols.slice(0, 4).map(p => (
+        <span key={p} className="px-2 py-1 bg-slate-800 text-slate-400 rounded text-[10px] border border-white/5">{p}</span>
+       ))}
+      </div>
+     </div>
+     {/* Layer Comparisons Table */}
+     <div>
+      <h4 className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-2 flex items-center gap-2">
+       <Icons.Layers size={12} /> Layer Overview
+      </h4>
+      <table className="w-full text-xs text-slate-300 border border-white/10 rounded">
+       <thead><tr className="border-b border-white/10"><th className="p-2 text-left">Layer</th><th className="p-2 text-left">PDU</th><th className="p-2 text-left">Key Protocol</th></tr></thead>
+       <tbody>{SIMULATION_LAYERS.map(l => <tr key={l.id} className="border-b border-white/5"><td className="p-2">{l.name}</td><td className="p-2">{l.pdus}</td><td className="p-2">{l.protocols[0]}</td></tr>)}</tbody>
+      </table>
+     </div>
+    </div>
+    {phase === 'explore' && (
+     <div className="p-3 bg-slate-950/50 border-t border-white/5 text-center">
+      <p className="text-[10px] text-slate-500 uppercase tracking-widest">Press Play to Resume Simulation</p>
+     </div>
+    )}
+    <div className="absolute top-0 left-0 w-full h-1" style={{ background: `linear-gradient(90deg, transparent, ${layer.neonColor}, transparent)` }}></div>
+   </div>
+  );
+ };
 
-            return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0 opacity-50" />;
-        };
+ // 4. Quiz Modal
+ const QuizModal = ({ onClose, onComplete }) => {
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [score, setScore] = useState(0);
 
-        // 2. Packet Inspector
-        const PacketInspector = ({ onClose }) => {
-            const [hoveredLayer, setHoveredLayer] = useState(null);
+  const question = QUIZ_QUESTIONS[currentQuestion];
+  if (!question) return null;
 
-            return (
-                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-                    <div className="bg-slate-900 border border-white/10 w-full max-w-5xl h-[80vh] rounded-2xl flex overflow-hidden shadow-2xl relative">
-                        <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-white z-50 p-2 hover:bg-white/10 rounded-full transition-colors">
-                            <Icons.X size={24} />
-                        </button>
-                        
-                        <div className="w-1/3 bg-slate-950/50 border-r border-white/5 p-6 overflow-y-auto">
-                            <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-                                <Icons.Search size={20} className="text-cyan-400" /> Packet Structure
-                            </h2>
-                            <p className="text-slate-400 text-sm mb-6">Hover over the nested layers to see the headers added during encapsulation.</p>
-                            
-                            <div className="space-y-2">
-                                {SIMULATION_LAYERS.slice().reverse().map((layer, index) => {
-                                    const isHovered = hoveredLayer === layer.id;
-                                    return (
-                                        <div 
-                                            key={layer.id}
-                                            className={`p-3 rounded-lg border transition-all duration-300 ${isHovered ? 'bg-slate-800 border-cyan-500/50 translate-x-2' : 'bg-slate-900 border-white/5 opacity-60'}`}
-                                            style={{ marginLeft: `${index * 12}px` }}
-                                        >
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: layer.neonColor }}></span>
-                                                <span className={`text-sm font-bold ${isHovered ? 'text-white' : 'text-slate-400'}`}>{layer.name} Header</span>
-                                            </div>
-                                            {isHovered && (
-                                                <div className="space-y-1 mt-2 pl-4 border-l border-white/10">
-                                                    {layer.headerInfo.fields.map((field, i) => (
-                                                        <div key={i} className="text-xs font-mono text-cyan-200/80">{field}</div>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                    );
-                                })}
-                                <div className="p-3 rounded-lg bg-white/10 border border-white/20 text-center mt-4 mx-8 animate-pulse">
-                                    <span className="text-xs font-bold text-white uppercase tracking-widest">Payload Data</span>
-                                </div>
-                            </div>
-                        </div>
+  const handleAnswer = (index) => {
+   if (selectedAnswer !== null) return;
+   setSelectedAnswer(index);
+   if (index === question.correct) setScore(score + 1);
+   setTimeout(() => {
+    if (currentQuestion < QUIZ_QUESTIONS.length - 1) {
+     setCurrentQuestion(currentQuestion + 1);
+     setSelectedAnswer(null);
+    } else {
+     onComplete(score);
+    }
+   }, 1500);
+  };
 
-                        <div className="flex-1 bg-slate-900 flex items-center justify-center p-8 relative overflow-hidden">
-                             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-cyan-900/10 via-slate-900 to-slate-900"></div>
-                             
-                             {/* Visual Nesting Doll Representation */}
-                             <div className="relative z-10 flex items-center justify-center">
-                                {SIMULATION_LAYERS.map((layer, index) => {
-                                    const size = 380 - (index * 40);
-                                    const isActive = hoveredLayer === layer.id;
-                                    
-                                    return (
-                                        <div
-                                            key={layer.id}
-                                            onMouseEnter={() => setHoveredLayer(layer.id)}
-                                            onMouseLeave={() => setHoveredLayer(null)}
-                                            className={`absolute flex items-start justify-center pt-2 rounded-xl border-2 transition-all duration-300 cursor-crosshair hover:shadow-[0_0_30px_rgba(0,0,0,0.5)]`}
-                                            style={{
-                                                width: `${size}px`,
-                                                height: `${size}px`,
-                                                borderColor: layer.neonColor,
-                                                backgroundColor: isActive ? `${layer.neonColor}10` : 'rgba(15, 23, 42, 0.8)',
-                                                zIndex: index,
-                                                transform: isActive ? 'scale(1.05)' : 'scale(1)',
-                                                boxShadow: isActive ? `0 0 20px ${layer.neonColor}40` : 'none'
-                                            }}
-                                        >
-                                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider" style={{ color: layer.neonColor }}>
-                                                {layer.pdus} ({layer.name})
-                                            </span>
-                                        </div>
-                                    );
-                                })}
-                                <div className="absolute z-50 w-20 h-20 bg-white rounded-lg flex items-center justify-center shadow-lg animate-bounce">
-                                    <span className="text-slate-900 font-bold text-xs">DATA</span>
-                                </div>
-                             </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
+  return (
+   <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/90 backdrop-blur-sm p-4">
+    <div className="bg-slate-900 border border-white/10 w-full max-w-md rounded-2xl p-6 space-y-4">
+     <h2 className="text-xl font-bold text-white text-center">OSI Quiz</h2>
+     <div className="space-y-3">
+      <p className="text-slate-300">{question.question}</p>
+      <div className="space-y-2">
+       {question.options.map((opt, i) => (
+        <button
+         key={i}
+         onClick={() => handleAnswer(i)}
+         disabled={selectedAnswer !== null}
+         className={`w-full p-3 rounded-lg border transition-all ${selectedAnswer === null ? 'bg-slate-800 border-white/5 hover:bg-white/5' : i === question.correct ? 'bg-green-500 border-green-500' : 'bg-slate-700 border-slate-700'}`}
+        >
+         {opt}
+        </button>
+       ))}
+      </div>
+     </div>
+     {selectedAnswer !== null && (
+      <p className={`text-center text-sm ${selectedAnswer === question.correct ? 'text-green-400' : 'text-red-400'}`}>
+       {selectedAnswer === question.correct ? 'Correct!' : `Wrong! Correct is ${question.options[question.correct]}`}
+      </p>
+     )}
+    </div>
+   </div>
+  );
+ };
 
-        // 3. Explanation Window
-        const ExplanationWindow = ({ layerId, phase, onClose }) => {
-            if (!layerId && phase !== 'transmission') return null;
+ // 5. Visual Simulator
+ const VisualSimulator = () => {
+  const [mode, setMode] = useState('wired');
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [speed, setSpeed] = useState(1);
+  const [activeInfo, setActiveInfo] = useState({ layerId: null, phase: 'idle' });
+  const [showInspector, setShowInspector] = useState(false);
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [quizScore, setQuizScore] = useState(0);
+  const [timelineProgress, setTimelineProgress] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
-            let positionClasses = "top-24 right-4 md:right-8"; 
+  const timelineRef = useRef(null);
+  const containerRef = useRef(null);
+  const packetRef = useRef(null);
+  const canvasRef = useRef(null);
+  const canvasReqRef = useRef(0);
 
-            if (phase === 'decapsulation') {
-                positionClasses = "top-24 left-4 md:left-8";
-            } else if (phase === 'transmission') {
-                positionClasses = "top-32 left-1/2 -translate-x-1/2";
-            } else if (phase === 'explore') {
-                positionClasses = "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/20";
-            }
+  // ARIA Live Region
+  const ariaLiveRef = useRef(null);
 
-            if (phase === 'transmission') {
-                return (
-                    <div className={`absolute ${positionClasses} w-80 glass-panel border-l-4 border-purple-500 rounded-xl overflow-hidden z-40`}>
-                        <div className="p-5">
-                            <div className="flex items-center gap-3 mb-3 text-purple-400">
-                                <Icons.Activity className="animate-pulse" size={20} />
-                                <h3 className="font-bold text-lg tracking-wide uppercase">Transmission</h3>
-                            </div>
-                            <p className="text-slate-300 text-sm leading-relaxed mb-4">
-                                The raw bit stream is transmitted over the physical medium (Wired/Wireless). Data exists here purely as signals.
-                            </p>
-                            <div className="flex gap-2">
-                                <span className="px-2 py-1 bg-purple-500/10 border border-purple-500/30 rounded text-xs font-mono text-purple-300">Binary</span>
-                                <span className="px-2 py-1 bg-purple-500/10 border border-purple-500/30 rounded text-xs font-mono text-purple-300">Signals</span>
-                            </div>
-                        </div>
-                    </div>
-                );
-            }
+  useEffect(() => {
+   if (!window.gsap || !containerRef.current || !packetRef.current) return;
+   const gsap = window.gsap;
+   const packet = packetRef.current;
+   
+   if (timelineRef.current) timelineRef.current.kill();
 
-            const layer = SIMULATION_LAYERS.find(l => l.id === layerId);
-            if (!layer) return null;
+   const tl = gsap.timeline({ 
+    paused: true,
+    onStart: () => setIsPlaying(true),
+    onComplete: () => { 
+     setIsPlaying(false); 
+     setActiveInfo({ layerId: null, phase: 'idle' });
+     setShowQuiz(true);
+    },
+    onUpdate: () => setTimelineProgress(tl.progress())
+   });
+   timelineRef.current = tl;
 
-            const isEncapsulating = phase === 'encapsulation';
-            const actionText = isEncapsulating ? "Encapsulating Data" : phase === 'decapsulation' ? "Decapsulating Data" : "Layer Details";
-            const actionColor = isEncapsulating ? "text-cyan-400" : phase === 'decapsulation' ? "text-green-400" : "text-white";
+   // Build Animation
+   const senderL7 = document.getElementById('s-l7');
+   if (!senderL7) return;
+   
+   const sL7Rect = senderL7.getBoundingClientRect();
+   const containerRect = containerRef.current.getBoundingClientRect();
 
-            return (
-                <div className={`absolute ${positionClasses} w-80 md:w-96 glass-panel rounded-xl overflow-hidden shadow-2xl z-40 flex flex-col max-h-[calc(100vh-150px)] transition-all ease-out`}>
-                    <div className="relative p-5 pb-4 bg-slate-900/50 border-b border-white/5">
-                        <div className="flex justify-between items-start">
-                            <div>
-                                <div className={`text-xs font-bold uppercase tracking-widest mb-1 flex items-center gap-2 ${actionColor}`}>
-                                    {isEncapsulating && <Icons.ArrowDown size={14} className="animate-bounce" />}
-                                    {phase === 'decapsulation' && <Icons.ArrowUp size={14} className="animate-bounce" />}
-                                    {phase === 'explore' && <Icons.BookOpen size={14} />}
-                                    {actionText}
-                                </div>
-                                <h2 className="text-2xl font-bold text-white flex items-center gap-3">
-                                    <span className="flex items-center justify-center w-8 h-8 rounded bg-slate-800 text-sm font-mono border border-white/10" style={{ color: layer.neonColor, borderColor: layer.neonColor }}>
-                                        {layer.id}
-                                    </span>
-                                    {layer.name}
-                                </h2>
-                            </div>
-                            {phase === 'explore' && (
-                                <button onClick={onClose} className="text-slate-500 hover:text-white transition-colors bg-white/5 rounded-full p-1">
-                                    <Icons.X size={20} />
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                    <div className="p-5 pt-4 overflow-y-auto custom-scrollbar space-y-5">
-                        <p className="text-slate-200 text-sm leading-relaxed">{layer.description}</p>
-                        {phase !== 'explore' && (
-                            <div className="p-3 bg-slate-800/40 rounded-lg border border-white/5 relative overflow-hidden">
-                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-transparent via-white/20 to-transparent"></div>
-                                <p className="text-xs text-slate-400 font-mono">
-                                    {isEncapsulating 
-                                        ? `Adding ${layer.name} Header (${layer.pdus}). Preparing for lower layer.`
-                                        : `Processing ${layer.name} Header. Extracting ${layer.pdus} for upper layer.`}
-                                </p>
-                            </div>
-                        )}
-                        <div>
-                            <h4 className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-2 flex items-center gap-2">
-                                <Icons.Info size={12} /> Real World Analogy
-                            </h4>
-                            <div className="p-4 bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl border border-white/5 italic text-slate-300 text-sm relative">"{layer.analogy}"</div>
-                        </div>
-                        <div>
-                            <h4 className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-2 flex items-center gap-2">
-                                <Icons.Layers size={12} /> Protocols & PDU
-                            </h4>
-                            <div className="flex flex-wrap gap-2">
-                                <span className="px-2 py-1 bg-slate-800 text-cyan-200 rounded text-[10px] font-mono border border-cyan-500/20">PDU: {layer.pdus}</span>
-                                {layer.protocols.slice(0, 4).map(p => (
-                                    <span key={p} className="px-2 py-1 bg-slate-800 text-slate-400 rounded text-[10px] border border-white/5">{p}</span>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                    {phase === 'explore' && (
-                        <div className="p-3 bg-slate-950/50 border-t border-white/5 text-center">
-                            <p className="text-[10px] text-slate-500 uppercase tracking-widest">Press Play to Resume Simulation</p>
-                        </div>
-                    )}
-                    <div className="absolute top-0 left-0 w-full h-1" style={{ background: `linear-gradient(90deg, transparent, ${layer.neonColor}, transparent)` }}></div>
-                </div>
-            );
-        };
+   // 1. Initial Packet State
+   packet.innerHTML = ''; 
+   const icon = document.createElement('div');
+   icon.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>';
+   packet.appendChild(icon);
+   
+   const startTop = sL7Rect.top - containerRect.top;
+   const startLeft = sL7Rect.left - containerRect.left + sL7Rect.width / 2 - 20;
 
-        // 4. Visual Simulator
-        const VisualSimulator = () => {
-            const [mode, setMode] = useState('wired');
-            const [isPlaying, setIsPlaying] = useState(false);
-            const [speed, setSpeed] = useState(1);
-            const [activeInfo, setActiveInfo] = useState({ layerId: null, phase: 'idle' });
-            const [showInspector, setShowInspector] = useState(false);
+   tl.set(packet, { 
+    top: startTop, left: startLeft, opacity: 0, scale: 0.5,
+    backgroundColor: 'white', borderRadius: '6px',
+    boxShadow: '0 0 15px rgba(255,255,255,0.5)',
+    color: '#333', width: 40, height: 40, rotation: 0
+   });
 
-            const timelineRef = useRef(null);
-            const containerRef = useRef(null);
-            const packetRef = useRef(null);
-            const canvasRef = useRef(null);
-            const canvasReqRef = useRef(0);
+   // 2. Encapsulation
+   tl.to(packet, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out" });
 
-            useEffect(() => {
-                if (!window.gsap || !containerRef.current || !packetRef.current) return;
-                const gsap = window.gsap;
-                const packet = packetRef.current;
-                
-                if (timelineRef.current) timelineRef.current.kill();
+   for (let i = 7; i >= 1; i--) {
+    const currentId = `s-l${i}`;
+    const nextId = i > 1 ? `s-l${i-1}` : null;
+    const layerEl = document.getElementById(currentId);
 
-                const tl = gsap.timeline({ 
-                    paused: true,
-                    onStart: () => setIsPlaying(true),
-                    onComplete: () => { setIsPlaying(false); setActiveInfo({ layerId: null, phase: 'idle' }); }
-                });
-                timelineRef.current = tl;
+    if (!layerEl) continue;
 
-                // Build Animation
-                const senderL7 = document.getElementById('s-l7');
-                if (!senderL7) return;
-                
-                const sL7Rect = senderL7.getBoundingClientRect();
-                const containerRect = containerRef.current.getBoundingClientRect();
+    tl.call(() => { 
+     setActiveInfo({ layerId: i, phase: 'encapsulation' });
+     if (ariaLiveRef.current) ariaLiveRef.current.textContent = `Encapsulating at ${SIMULATION_LAYERS.find(l => l.id === i)?.name} layer.`;
+    });
+    tl.to(layerEl, { backgroundColor: 'rgba(255,255,255,0.15)', borderColor: SIMULATION_LAYERS.find(l => l.id === i)?.neonColor, scale: 1.05, duration: 0.2 }, "<");
 
-                // 1. Initial Packet State
-                packet.innerHTML = ''; 
-                const icon = document.createElement('div');
-                icon.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>';
-                packet.appendChild(icon);
-                
-                const startTop = sL7Rect.top - containerRect.top;
-                const startLeft = sL7Rect.left - containerRect.left + sL7Rect.width / 2 - 20;
+    if (i < 7) {
+     tl.add(() => {
+      const color = SIMULATION_LAYERS.find(l => l.id === i)?.neonColor || '#ccc';
+      const header = document.createElement('div');
+      header.style.cssText = `position: absolute; top: 0; height: 100%; width: 6px; background-color: ${color}; left: -${(8 - i) * 6}px; border-right: 1px solid rgba(0,0,0,0.1);`;
+      header.id = `header-encap-${i}`; 
+      packet.appendChild(header);
+      gsap.from(header, { scaleY: 0, duration: 0.2 });
+     });
+    }
 
-                tl.set(packet, { 
-                    top: startTop, left: startLeft, opacity: 0, scale: 0.5,
-                    backgroundColor: 'white', borderRadius: '6px',
-                    boxShadow: '0 0 15px rgba(255,255,255,0.5)',
-                    color: '#333', width: 40, height: 40, rotation: 0
-                });
+    if (nextId) {
+     const nextEl = document.getElementById(nextId);
+     if (nextEl) {
+      const nextRect = nextEl.getBoundingClientRect();
+      const nextTop = nextRect.top - containerRect.top;
+      tl.to(packet, { top: nextTop, duration: 0.8, ease: "power1.inOut" });
+      tl.to(layerEl, { backgroundColor: 'rgba(15, 23, 42, 0.6)', borderColor: 'rgba(255,255,255,0.08)', scale: 1, duration: 0.2 }, "-=0.4");
+     }
+    }
+   }
+   tl.to(document.getElementById('s-l1'), { backgroundColor: 'rgba(15, 23, 42, 0.6)', borderColor: 'rgba(255,255,255,0.08)', scale: 1, duration: 0.2 });
 
-                // 2. Encapsulation
-                tl.to(packet, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out" });
+   // 3. Transmission
+   const receiverL1 = document.getElementById('r-l1');
+   if (!receiverL1) return;
+   const rL1Rect = receiverL1.getBoundingClientRect();
+   const destLeft = rL1Rect.left - containerRect.left + rL1Rect.width / 2 - 20;
+   const signalColor = mode === 'wired' ? '#a855f7' : '#38bdf8';
+   
+   tl.call(() => { 
+    setActiveInfo({ layerId: null, phase: 'transmission' });
+    if (ariaLiveRef.current) ariaLiveRef.current.textContent = 'Transmitting over physical medium.';
+   });
 
-                for (let i = 7; i >= 1; i--) {
-                    const currentId = `s-l${i}`;
-                    const nextId = i > 1 ? `s-l${i-1}` : null;
-                    const layerEl = document.getElementById(currentId);
+   tl.to(packet, { 
+    scale: 0.3, borderRadius: '50%', backgroundColor: signalColor,
+    boxShadow: `0 0 30px 10px ${signalColor}`, color: 'transparent', duration: 0.3 
+   });
 
-                    if (!layerEl) continue;
+   tl.to(packet, {
+    left: destLeft, duration: 2, ease: "linear",
+    onStart: () => startCanvasAnimation(),
+    onComplete: () => stopCanvasAnimation()
+   });
 
-                    tl.call(() => setActiveInfo({ layerId: i, phase: 'encapsulation' }));
-                    tl.to(layerEl, { backgroundColor: 'rgba(255,255,255,0.15)', borderColor: SIMULATION_LAYERS.find(l => l.id === i)?.neonColor, scale: 1.05, duration: 0.2 }, "<");
+   // 4. Decapsulation
+   tl.to(packet, { 
+    scale: 1, borderRadius: '6px', backgroundColor: 'white',
+    boxShadow: '0 0 15px rgba(255,255,255,0.5)', color: '#333', duration: 0.3
+   });
 
-                    if (i < 7) {
-                        tl.add(() => {
-                            const color = SIMULATION_LAYERS.find(l => l.id === i)?.neonColor || '#ccc';
-                            const header = document.createElement('div');
-                            header.style.cssText = `position: absolute; top: 0; height: 100%; width: 6px; background-color: ${color}; left: -${(8 - i) * 6}px; border-right: 1px solid rgba(0,0,0,0.1);`;
-                            header.id = `header-encap-${i}`; 
-                            packet.appendChild(header);
-                            gsap.from(header, { scaleY: 0, duration: 0.2 });
-                        });
-                    }
+   for (let i = 1; i <= 7; i++) {
+    const currentId = `r-l${i}`;
+    const nextId = i < 7 ? `r-l${i+1}` : null;
+    const layerEl = document.getElementById(currentId);
 
-                    if (nextId) {
-                        const nextEl = document.getElementById(nextId);
-                        if (nextEl) {
-                            const nextRect = nextEl.getBoundingClientRect();
-                            const nextTop = nextRect.top - containerRect.top;
-                            tl.to(packet, { top: nextTop, duration: 0.8, ease: "power1.inOut" });
-                            tl.to(layerEl, { backgroundColor: 'rgba(15, 23, 42, 0.6)', borderColor: 'rgba(255,255,255,0.08)', scale: 1, duration: 0.2 }, "-=0.4");
-                        }
-                    }
-                }
-                tl.to(document.getElementById('s-l1'), { backgroundColor: 'rgba(15, 23, 42, 0.6)', borderColor: 'rgba(255,255,255,0.08)', scale: 1, duration: 0.2 });
+    if (!layerEl) continue;
 
-                // 3. Transmission
-                const receiverL1 = document.getElementById('r-l1');
-                if (!receiverL1) return;
-                const rL1Rect = receiverL1.getBoundingClientRect();
-                const destLeft = rL1Rect.left - containerRect.left + rL1Rect.width / 2 - 20;
-                const signalColor = mode === 'wired' ? '#a855f7' : '#38bdf8';
-                
-                tl.call(() => setActiveInfo({ layerId: null, phase: 'transmission' }));
+    tl.call(() => { 
+     setActiveInfo({ layerId: i, phase: 'decapsulation' });
+     if (ariaLiveRef.current) ariaLiveRef.current.textContent = `Decapsulating at ${SIMULATION_LAYERS.find(l => l.id === i)?.name} layer.`;
+    });
+    tl.to(layerEl, { backgroundColor: 'rgba(255,255,255,0.15)', borderColor: SIMULATION_LAYERS.find(l => l.id === i)?.neonColor, scale: 1.05, duration: 0.2 }, "<");
 
-                tl.to(packet, { 
-                    scale: 0.3, borderRadius: '50%', backgroundColor: signalColor,
-                    boxShadow: `0 0 30px 10px ${signalColor}`, color: 'transparent', duration: 0.3 
-                });
+    if (i < 7) {
+     tl.add(() => {
+      const header = packet.querySelector(`#header-encap-${i}`);
+      if (header) {
+       gsap.to(header, { width: 0, opacity: 0, duration: 0.2, onComplete: () => header.remove() });
+      }
+     }, "+=0.2");
+    }
 
-                tl.to(packet, {
-                    left: destLeft, duration: 2, ease: "linear",
-                    onStart: () => startCanvasAnimation(),
-                    onComplete: () => stopCanvasAnimation()
-                });
+    if (nextId) {
+     const nextEl = document.getElementById(nextId);
+     if (nextEl) {
+      const nextRect = nextEl.getBoundingClientRect();
+      const nextTop = nextRect.top - containerRect.top;
+      tl.to(packet, { top: nextTop, duration: 0.8, ease: "power1.inOut" });
+      tl.to(layerEl, { backgroundColor: 'rgba(15, 23, 42, 0.6)', borderColor: 'rgba(255,255,255,0.08)', scale: 1, duration: 0.2 }, "-=0.4");
+     }
+    }
+   }
+   tl.to(document.getElementById('r-l7'), { backgroundColor: 'rgba(15, 23, 42, 0.6)', borderColor: 'rgba(255,255,255,0.08)', scale: 1, duration: 0.2 });
 
-                // 4. Decapsulation
-                tl.to(packet, { 
-                    scale: 1, borderRadius: '6px', backgroundColor: 'white',
-                    boxShadow: '0 0 15px rgba(255,255,255,0.5)', color: '#333', duration: 0.3
-                });
+   // 5. Success
+   tl.to(packet, { 
+    rotation: 360, scale: 1.5, backgroundColor: '#4ade80', 
+    boxShadow: '0 0 40px #4ade80', duration: 0.5 
+   });
+   tl.to(packet, { opacity: 0, scale: 0, delay: 0.5, duration: 0.3 });
+   tl.call(() => { 
+    setActiveInfo({ layerId: null, phase: 'idle' });
+    if (ariaLiveRef.current) ariaLiveRef.current.textContent = 'Simulation complete. Great job!';
+   });
+   tl.timeScale(speed);
+  }, [mode, speed]);
 
-                for (let i = 1; i <= 7; i++) {
-                    const currentId = `r-l${i}`;
-                    const nextId = i < 7 ? `r-l${i+1}` : null;
-                    const layerEl = document.getElementById(currentId);
+  useEffect(() => {
+   if (timelineRef.current) timelineRef.current.timeScale(speed);
+  }, [speed]);
 
-                    if (!layerEl) continue;
+  useEffect(() => {
+   const handleFullscreenChange = () => setIsFullscreen(!!document.fullscreenElement);
+   document.addEventListener('fullscreenchange', handleFullscreenChange);
+   return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
 
-                    tl.call(() => setActiveInfo({ layerId: i, phase: 'decapsulation' }));
-                    tl.to(layerEl, { backgroundColor: 'rgba(255,255,255,0.15)', borderColor: SIMULATION_LAYERS.find(l => l.id === i)?.neonColor, scale: 1.05, duration: 0.2 }, "<");
+  const togglePlay = () => {
+   if (timelineRef.current) {
+    if (isPlaying) {
+     timelineRef.current.pause();
+    } else {
+     if (timelineRef.current.progress() === 1) timelineRef.current.restart();
+     else timelineRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+   }
+  };
 
-                    if (i < 7) {
-                        tl.add(() => {
-                            const header = packet.querySelector(`#header-encap-${i}`);
-                            if (header) {
-                                gsap.to(header, { width: 0, opacity: 0, duration: 0.2, onComplete: () => header.remove() });
-                            }
-                        }, "+=0.2");
-                    }
+  const restart = () => {
+   if (timelineRef.current) {
+    timelineRef.current.restart();
+    setIsPlaying(true);
+    setShowQuiz(false);
+   }
+  };
 
-                    if (nextId) {
-                        const nextEl = document.getElementById(nextId);
-                        if (nextEl) {
-                            const nextRect = nextEl.getBoundingClientRect();
-                            const nextTop = nextRect.top - containerRect.top;
-                            tl.to(packet, { top: nextTop, duration: 0.8, ease: "power1.inOut" });
-                            tl.to(layerEl, { backgroundColor: 'rgba(15, 23, 42, 0.6)', borderColor: 'rgba(255,255,255,0.08)', scale: 1, duration: 0.2 }, "-=0.4");
-                        }
-                    }
-                }
-                tl.to(document.getElementById('r-l7'), { backgroundColor: 'rgba(15, 23, 42, 0.6)', borderColor: 'rgba(255,255,255,0.08)', scale: 1, duration: 0.2 });
+  const toggleFullscreen = () => {
+   if (!document.fullscreenElement) {
+    containerRef.current.requestFullscreen();
+   } else {
+    document.exitFullscreen();
+   }
+  };
 
-                // 5. Success
-                tl.to(packet, { 
-                    rotation: 360, scale: 1.5, backgroundColor: '#4ade80', 
-                    boxShadow: '0 0 40px #4ade80', duration: 0.5 
-                });
-                tl.to(packet, { opacity: 0, scale: 0, delay: 0.5, duration: 0.3 });
-                tl.call(() => setActiveInfo({ layerId: null, phase: 'idle' }));
-                tl.timeScale(speed);
-            }, [mode]);
+  const handleQuizComplete = (finalScore) => {
+   setQuizScore(finalScore);
+   setShowQuiz(false);
+  };
 
-            useEffect(() => {
-                if (timelineRef.current) timelineRef.current.timeScale(speed);
-            }, [speed]);
+  const handleLayerClick = (id) => {
+   if (timelineRef.current) {
+    timelineRef.current.pause();
+    setIsPlaying(false);
+    setActiveInfo({ layerId: id, phase: 'explore' });
+   }
+  };
 
-            const togglePlay = () => {
-                if (timelineRef.current) {
-                    if (isPlaying) {
-                        timelineRef.current.pause();
-                    } else {
-                        if (timelineRef.current.progress() === 1) timelineRef.current.restart();
-                        else timelineRef.current.play();
-                    }
-                    setIsPlaying(!isPlaying);
-                }
-            };
+  const startCanvasAnimation = () => {
+   const canvas = canvasRef.current;
+   if (!canvas) return;
+   const ctx = canvas.getContext('2d');
+   let offset = 0;
+   const animate = () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = mode === 'wired' ? '#a855f7' : '#38bdf8';
+    ctx.lineCap = 'round';
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = ctx.strokeStyle;
+    const y = canvas.height / 2;
+    ctx.beginPath();
+    if (mode === 'wired') {
+     ctx.moveTo(0, y);
+     const step = 40;
+     for (let x = 0; x < canvas.width; x += step) {
+      const active = ((x - offset) % (step * 2)) < step;
+      const h = 15;
+      ctx.lineTo(x, active ? y - h : y + h);
+      ctx.lineTo(x + step, active ? y - h : y + h);
+     }
+    } else {
+     for (let x = 0; x < canvas.width; x++) {
+      const amp = 20; const freq = 0.05;
+      ctx.lineTo(x, y + Math.sin((x - offset) * freq) * amp);
+     }
+    }
+    ctx.stroke();
+    offset += 3;
+    canvasReqRef.current = requestAnimationFrame(animate);
+   };
+   animate();
+  };
 
-            const restart = () => {
-                if (timelineRef.current) {
-                    timelineRef.current.restart();
-                    setIsPlaying(true);
-                }
-            };
+  const stopCanvasAnimation = () => {
+   if (canvasReqRef.current) cancelAnimationFrame(canvasReqRef.current);
+   const canvas = canvasRef.current;
+   if (canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  };
 
-            const handleLayerClick = (id) => {
-                if (timelineRef.current) {
-                    timelineRef.current.pause();
-                    setIsPlaying(false);
-                    setActiveInfo({ layerId: id, phase: 'explore' });
-                }
-            };
+  useEffect(() => {
+   const handleResize = () => {
+    if (canvasRef.current && canvasRef.current.parentElement) {
+     canvasRef.current.width = canvasRef.current.parentElement.offsetWidth;
+     canvasRef.current.height = canvasRef.current.parentElement.offsetHeight;
+    }
+   };
+   window.addEventListener('resize', handleResize);
+   handleResize();
+   return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-            const startCanvasAnimation = () => {
-                const canvas = canvasRef.current;
-                if (!canvas) return;
-                const ctx = canvas.getContext('2d');
-                let offset = 0;
-                const animate = () => {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.lineWidth = 3;
-                    ctx.strokeStyle = mode === 'wired' ? '#a855f7' : '#38bdf8';
-                    ctx.lineCap = 'round';
-                    ctx.shadowBlur = 10;
-                    ctx.shadowColor = ctx.strokeStyle;
-                    const y = canvas.height / 2;
-                    ctx.beginPath();
-                    if (mode === 'wired') {
-                        ctx.moveTo(0, y);
-                        const step = 40;
-                        for (let x = 0; x < canvas.width; x += step) {
-                            const active = ((x - offset) % (step * 2)) < step;
-                            const h = 15;
-                            ctx.lineTo(x, active ? y - h : y + h);
-                            ctx.lineTo(x + step, active ? y - h : y + h);
-                        }
-                    } else {
-                        for (let x = 0; x < canvas.width; x++) {
-                            const amp = 20; const freq = 0.05;
-                            ctx.lineTo(x, y + Math.sin((x - offset) * freq) * amp);
-                        }
-                    }
-                    ctx.stroke();
-                    offset += 3;
-                    canvasReqRef.current = requestAnimationFrame(animate);
-                };
-                animate();
-            };
+  return (
+   <div className="flex flex-col h-full w-full bg-slate-950 text-white relative overflow-hidden" ref={containerRef}>
+    
+    {showInspector && <PacketInspector onClose={() => setShowInspector(false)} />}
+    {showQuiz && <QuizModal onClose={() => setShowQuiz(false)} onComplete={handleQuizComplete} />}
+    
+    <ExplanationWindow 
+     layerId={activeInfo.layerId} 
+     phase={activeInfo.phase} 
+     onClose={() => setActiveInfo({ layerId: null, phase: 'idle' })} 
+    />
 
-            const stopCanvasAnimation = () => {
-                if (canvasReqRef.current) cancelAnimationFrame(canvasReqRef.current);
-                const canvas = canvasRef.current;
-                if (canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-            };
+    <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 glass-panel rounded-full px-6 py-3 flex items-center gap-6 shadow-2xl shadow-cyan-900/20">
+     <button onClick={togglePlay} className="hover:text-cyan-400 transition-colors">
+      {isPlaying ? <Icons.Pause size={24} /> : <Icons.Play size={24} />}
+     </button>
+     <button onClick={restart} className="hover:text-cyan-400 transition-colors">
+      <Icons.RotateCcw size={20} />
+     </button>
+     <div className="w-px h-6 bg-white/20"></div>
+     <div className="flex items-center gap-2">
+      <button onClick={() => setMode('wired')} className={`p-2 rounded-lg transition-all ${mode === 'wired' ? 'bg-purple-600 text-white shadow-[0_0_15px_#a855f7]' : 'text-slate-400 hover:bg-white/5'}`} title="Wired">
+       <Icons.Network size={18} />
+      </button>
+      <button onClick={() => setMode('wifi')} className={`p-2 rounded-lg transition-all ${mode === 'wifi' ? 'bg-cyan-500 text-white shadow-[0_0_15px_#06b6d4]' : 'text-slate-400 hover:bg-white/5'}`} title="Wireless">
+       <Icons.Wifi size={18} />
+      </button>
+     </div>
+     <div className="w-px h-6 bg-white/20"></div>
+     {/* Speed Controls */}
+     <div className="flex items-center gap-2">
+      <label className="text-xs text-slate-400">Speed</label>
+      <input type="range" min="0.5" max="3" step="0.5" value={speed} onChange={(e) => setSpeed(parseFloat(e.target.value))} className="slider w-20" />
+      <span className="text-xs text-slate-400">{speed}x</span>
+     </div>
+     <div className="w-px h-6 bg-white/20"></div>
+     <button onClick={toggleFullscreen} className="hover:text-cyan-400 transition-colors" title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}>
+      <Icons.Maximize size={20} />
+     </button>
+     <button 
+      onClick={() => { setIsPlaying(false); timelineRef.current?.pause(); setShowInspector(true); }}
+      className="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center gap-2 border border-white/10"
+     >
+      <Icons.Search size={14} /> Inspect Packet
+     </button>
+    </div>
 
-            useEffect(() => {
-                const handleResize = () => {
-                    if (canvasRef.current && canvasRef.current.parentElement) {
-                        canvasRef.current.width = canvasRef.current.parentElement.offsetWidth;
-                        canvasRef.current.height = canvasRef.current.parentElement.offsetHeight;
-                    }
-                };
-                window.addEventListener('resize', handleResize);
-                handleResize();
-                return () => window.removeEventListener('resize', handleResize);
-            }, []);
+    {/* Progress Bar */}
+    <div className="absolute top-20 left-1/2 -translate-x-1/2 z-40 w-64 bg-slate-800 rounded-full h-1 overflow-hidden">
+     <div className="bg-cyan-500 h-1 rounded-full transition-all duration-300" style={{width: `${timelineProgress * 100}%`}}></div>
+    </div>
 
-            return (
-                <div className="flex flex-col h-full w-full bg-slate-950 text-white relative overflow-hidden" ref={containerRef}>
-                    
-                    {showInspector && <PacketInspector onClose={() => setShowInspector(false)} />}
-                    
-                    <ExplanationWindow 
-                        layerId={activeInfo.layerId} 
-                        phase={activeInfo.phase} 
-                        onClose={() => setActiveInfo({ layerId: null, phase: 'idle' })} 
-                    />
+    <div className="flex-1 flex flex-col md:flex-row items-center justify-center p-4 md:p-12 gap-8 md:gap-20 relative">
+     <div ref={packetRef} className="absolute z-50 flex items-center justify-center pointer-events-none"></div>
 
-                    <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 glass-panel rounded-full px-6 py-3 flex items-center gap-6 shadow-2xl shadow-cyan-900/20">
-                        <button onClick={togglePlay} className="hover:text-cyan-400 transition-colors">
-                            {isPlaying ? <Icons.Pause size={24} /> : <Icons.Play size={24} />}
-                        </button>
-                        <button onClick={restart} className="hover:text-cyan-400 transition-colors">
-                            <Icons.RotateCcw size={20} />
-                        </button>
-                        <div className="w-px h-6 bg-white/20"></div>
-                        <div className="flex items-center gap-2">
-                            <button onClick={() => setMode('wired')} className={`p-2 rounded-lg transition-all ${mode === 'wired' ? 'bg-purple-600 text-white shadow-[0_0_15px_#a855f7]' : 'text-slate-400 hover:bg-white/5'}`} title="Wired">
-                                <Icons.Network size={18} />
-                            </button>
-                            <button onClick={() => setMode('wifi')} className={`p-2 rounded-lg transition-all ${mode === 'wifi' ? 'bg-cyan-500 text-white shadow-[0_0_15px_#06b6d4]' : 'text-slate-400 hover:bg-white/5'}`} title="Wireless">
-                                <Icons.Wifi size={18} />
-                            </button>
-                        </div>
-                        <div className="w-px h-6 bg-white/20"></div>
-                        <button 
-                            onClick={() => { setIsPlaying(false); timelineRef.current?.pause(); setShowInspector(true); }}
-                            className="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center gap-2 border border-white/10"
-                        >
-                            <Icons.Search size={14} /> Inspect Packet
-                        </button>
-                    </div>
+     {/* ARIA Live */}
+     <div ref={ariaLiveRef} className="sr-only" aria-live="polite"></div>
 
-                    <div className="flex-1 flex flex-col md:flex-row items-center justify-center p-4 md:p-12 gap-8 md:gap-20 relative">
-                        <div ref={packetRef} className="absolute z-50 flex items-center justify-center pointer-events-none"></div>
+     {/* Sender */}
+     <div className="flex flex-col items-center w-full max-w-[240px] z-10">
+      <div className="mb-6 text-slate-400 flex flex-col items-center gap-2">
+       <Icons.Laptop size={48} className="text-slate-200" />
+       <span className="font-mono text-xs tracking-widest">SENDER_HOST</span>
+      </div>
+      <div className="flex flex-col w-full gap-3">
+       {SIMULATION_LAYERS.map(layer => {
+        const Icon = IconMap[layer.iconName] || Icons.Monitor;
+        return (
+         <button 
+          key={layer.id} 
+          id={`s-l${layer.id}`} 
+          onClick={() => handleLayerClick(layer.id)}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleLayerClick(layer.id); } }}
+          tabIndex={0}
+          role="button"
+          aria-label={`Explore ${layer.name} layer: ${layer.description.substring(0, 50)}...`}
+          className="glass-panel h-14 rounded-lg flex items-center px-4 gap-4 transition-all duration-300 border-l-4 cursor-pointer hover:bg-white/5 hover:translate-x-1 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          style={{ borderLeftColor: layer.neonColor }}
+         >
+          <span className="font-mono text-xs font-bold opacity-30 w-4">{layer.id}</span>
+          <Icon size={18} style={{ color: layer.neonColor }} />
+          <span className="font-bold text-sm tracking-wide text-slate-200">{layer.name}</span>
+         </button>
+        );
+       })}
+      </div>
+     </div>
 
-                        {/* Sender */}
-                        <div className="flex flex-col items-center w-full max-w-[240px] z-10">
-                            <div className="mb-6 text-slate-400 flex flex-col items-center gap-2">
-                                <Icons.Laptop size={48} className="text-slate-200" />
-                                <span className="font-mono text-xs tracking-widest">SENDER_HOST</span>
-                            </div>
-                            <div className="flex flex-col w-full gap-3">
-                                {SIMULATION_LAYERS.map(layer => {
-                                    const Icon = IconMap[layer.iconName] || Icons.Monitor;
-                                    return (
-                                        <div 
-                                            key={layer.id} id={`s-l${layer.id}`} onClick={() => handleLayerClick(layer.id)}
-                                            className="glass-panel h-14 rounded-lg flex items-center px-4 gap-4 transition-all duration-300 border-l-4 cursor-pointer hover:bg-white/5 hover:translate-x-1"
-                                            style={{ borderLeftColor: layer.neonColor }}
-                                        >
-                                            <span className="font-mono text-xs font-bold opacity-30 w-4">{layer.id}</span>
-                                            <Icon size={18} style={{ color: layer.neonColor }} />
-                                            <span className="font-bold text-sm tracking-wide text-slate-200">{layer.name}</span>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
+     {/* Medium */}
+     <div className="flex-1 h-[100px] w-full relative flex items-center justify-center border-b border-dashed border-slate-700/50 self-end md:self-auto mb-12 md:mb-0">
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full"></canvas>
+      <span className="absolute -bottom-8 text-[10px] font-mono text-slate-500 tracking-[0.3em] uppercase">
+       {mode === 'wired' ? 'Physical_Link::Copper' : 'Physical_Link::Wireless_802.11'}
+      </span>
+     </div>
 
-                        {/* Medium */}
-                        <div className="flex-1 h-[100px] w-full relative flex items-center justify-center border-b border-dashed border-slate-700/50 self-end md:self-auto mb-12 md:mb-0">
-                            <canvas ref={canvasRef} className="absolute inset-0 w-full h-full"></canvas>
-                            <span className="absolute -bottom-8 text-[10px] font-mono text-slate-500 tracking-[0.3em] uppercase">
-                                {mode === 'wired' ? 'Physical_Link::Copper' : 'Physical_Link::Wireless_802.11'}
-                            </span>
-                        </div>
+     {/* Receiver */}
+     <div className="flex flex-col items-center w-full max-w-[240px] z-10">
+      <div className="mb-6 text-slate-400 flex flex-col items-center gap-2">
+       <Icons.Server size={48} className="text-slate-200" />
+       <span className="font-mono text-xs tracking-widest">RECEIVER_HOST</span>
+      </div>
+      <div className="flex flex-col w-full gap-3">
+       {SIMULATION_LAYERS.map(layer => {
+        const Icon = IconMap[layer.iconName] || Icons.Monitor;
+        return (
+         <button 
+          key={layer.id} 
+          id={`r-l${layer.id}`} 
+          onClick={() => handleLayerClick(layer.id)}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleLayerClick(layer.id); } }}
+          tabIndex={0}
+          role="button"
+          aria-label={`Explore ${layer.name} layer: ${layer.description.substring(0, 50)}...`}
+          className="glass-panel h-14 rounded-lg flex items-center px-4 gap-4 transition-all duration-300 border-r-4 justify-between cursor-pointer hover:bg-white/5 hover:-translate-x-1 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          style={{ borderRightColor: layer.neonColor }}
+         >
+          <div className="flex items-center gap-4">
+           <span className="font-bold text-sm tracking-wide text-slate-200">{layer.name}</span>
+           <Icon size={18} style={{ color: layer.neonColor }} />
+          </div>
+          <span className="font-mono text-xs font-bold opacity-30 w-4 text-right">{layer.id}</span>
+         </button>
+        );
+       })}
+      </div>
+     </div>
+    </div>
+    <div className="absolute bottom-6 left-6 z-40 flex items-center gap-2 text-slate-500 text-xs">
+     <Icons.Info size={14} /> <span>Click or tab to any layer to pause & inspect details. Quiz awaits after simulation!</span>
+    </div>
+    {showQuiz && quizScore > 0 && (
+     <div className="absolute bottom-6 right-6 z-40 text-right text-green-400 text-xs">
+      Quiz Score: {quizScore}/{QUIZ_QUESTIONS.length}
+     </div>
+    )}
+    <div className="absolute bottom-6 right-6 z-40 text-right pointer-events-none">
+     <h1 className="text-4xl font-black text-white/5 uppercase tracking-tighter">OSI.VISUAL</h1>
+    </div>
+   </div>
+  );
+ };
 
-                        {/* Receiver */}
-                        <div className="flex flex-col items-center w-full max-w-[240px] z-10">
-                            <div className="mb-6 text-slate-400 flex flex-col items-center gap-2">
-                                <Icons.Server size={48} className="text-slate-200" />
-                                <span className="font-mono text-xs tracking-widest">RECEIVER_HOST</span>
-                            </div>
-                            <div className="flex flex-col w-full gap-3">
-                                {SIMULATION_LAYERS.map(layer => {
-                                    const Icon = IconMap[layer.iconName] || Icons.Monitor;
-                                    return (
-                                        <div 
-                                            key={layer.id} id={`r-l${layer.id}`} onClick={() => handleLayerClick(layer.id)}
-                                            className="glass-panel h-14 rounded-lg flex items-center px-4 gap-4 transition-all duration-300 border-r-4 justify-between cursor-pointer hover:bg-white/5 hover:-translate-x-1"
-                                            style={{ borderRightColor: layer.neonColor }}
-                                        >
-                                            <div className="flex items-center gap-4">
-                                                <span className="font-bold text-sm tracking-wide text-slate-200">{layer.name}</span>
-                                                <Icon size={18} style={{ color: layer.neonColor }} />
-                                            </div>
-                                            <span className="font-mono text-xs font-bold opacity-30 w-4 text-right">{layer.id}</span>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="absolute bottom-6 left-6 z-40 flex items-center gap-2 text-slate-500 text-xs">
-                        <Icons.Info size={14} /> <span>Click any layer to pause & inspect details.</span>
-                    </div>
-                    <div className="absolute bottom-6 right-6 z-40 text-right pointer-events-none">
-                        <h1 className="text-4xl font-black text-white/5 uppercase tracking-tighter">OSI.VISUAL</h1>
-                    </div>
-                </div>
-            );
-        };
+ const App = () => {
+  return (
+   <div className="relative w-full h-screen overflow-hidden bg-slate-950 font-sans text-slate-200">
+    <NetworkBackground />
+    <div className="relative z-10 w-full h-full">
+     <VisualSimulator />
+    </div>
+   </div>
+  );
+ };
 
-        const App = () => {
-            return (
-                <div className="relative w-full h-screen overflow-hidden bg-slate-950 font-sans text-slate-200">
-                    <NetworkBackground />
-                    <div className="relative z-10 w-full h-full">
-                        <VisualSimulator />
-                    </div>
-                </div>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
+ const root = ReactDOM.createRoot(document.getElementById('root'));
+ root.render(<App />);
+ </script>
 </body>
 </html>
